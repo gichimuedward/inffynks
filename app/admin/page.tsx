@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import {
   collection,
   getDocs,
@@ -10,8 +10,6 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 type Tattoo = {
   id: string;
@@ -29,7 +27,6 @@ export default function AdminPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("tattoo");
-  const [image, setImage] = useState<File | null>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,10 +34,10 @@ export default function AdminPage() {
   const loadTattoos = async () => {
     const snapshot = await getDocs(collection(db, "tattoos"));
 
-    const data = snapshot.docs.map((doc) => {
-      const d = doc.data();
+    const data = snapshot.docs.map((docSnap) => {
+      const d = docSnap.data();
       return {
-        id: doc.id,
+        id: docSnap.id,
         title: d.title || "",
         description: d.description || "",
         price: d.price || 0,
@@ -61,10 +58,9 @@ export default function AdminPage() {
     setDescription("");
     setPrice("");
     setCategory("tattoo");
-    setImage(null);
   };
 
-  // 🔥 UPLOAD FIXED
+  // ✅ SAFE UPLOAD (NO STORAGE - DEPLOY SAFE)
   const uploadTattoo = async () => {
     try {
       if (!title || !description || !price) {
@@ -72,24 +68,14 @@ export default function AdminPage() {
         return;
       }
 
-      if (!image) {
-        alert("Select image");
-        return;
-      }
-
       setLoading(true);
-
-      const imageRef = ref(storage, `tattoos/${Date.now()}-${image.name}`);
-
-      await uploadBytes(imageRef, image);
-      const imageUrl = await getDownloadURL(imageRef);
 
       await addDoc(collection(db, "tattoos"), {
         title,
         description,
         price: Number(price),
         category,
-        imageUrl,
+        imageUrl: "", // TEMP: no upload yet
         createdAt: Date.now(),
       });
 
@@ -127,10 +113,10 @@ export default function AdminPage() {
 
   const startEdit = (t: Tattoo) => {
     setEditingId(t.id);
-    setTitle(t.title || "");
-    setDescription(t.description || "");
-    setPrice(String(t.price || ""));
-    setCategory(t.category || "tattoo");
+    setTitle(t.title);
+    setDescription(t.description);
+    setPrice(String(t.price));
+    setCategory(t.category);
   };
 
   return (
@@ -147,14 +133,14 @@ export default function AdminPage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
-          className="p-3 bg-black border"
+          className="p-3 bg-black border border-gray-700"
         />
 
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
-          className="p-3 bg-black border"
+          className="p-3 bg-black border border-gray-700"
         />
 
         <input
@@ -162,23 +148,17 @@ export default function AdminPage() {
           onChange={(e) => setPrice(e.target.value)}
           placeholder="Price"
           type="number"
-          className="p-3 bg-black border"
+          className="p-3 bg-black border border-gray-700"
         />
 
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="p-3 bg-black border"
+          className="p-3 bg-black border border-gray-700"
         >
           <option value="tattoo">Tattoo</option>
           <option value="piercing">Piercing</option>
         </select>
-
-        <input
-          type="file"
-          onChange={(e) => setImage(e.target.files?.[0] || null)}
-          className="p-3 bg-black border"
-        />
 
         <button
           disabled={loading}
@@ -211,16 +191,10 @@ export default function AdminPage() {
         {tattoos.map((t) => (
           <div key={t.id} className="border border-gray-800 p-3">
 
-            {t.imageUrl ? (
-              <img
-                src={t.imageUrl}
-                className="h-40 w-full object-cover"
-              />
-            ) : (
-              <div className="h-40 bg-gray-900 flex items-center justify-center">
-                No Image
-              </div>
-            )}
+            {/* NO IMAGE YET (SAFE DEPLOY VERSION) */}
+            <div className="h-40 bg-gray-900 flex items-center justify-center text-gray-500">
+              No Image (will be added after deploy)
+            </div>
 
             <h3 className="text-yellow-500 mt-2">{t.title}</h3>
             <p className="text-sm text-gray-400">{t.price} KES</p>
