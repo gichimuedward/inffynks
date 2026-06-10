@@ -9,22 +9,14 @@ export default function Home() {
   return (
     <main className="bg-black min-h-screen text-white">
 
-      {/* NAVBAR */}
       <Navbar />
-
-      {/* HERO */}
       <Hero />
-
-      {/* GALLERY */}
       <Gallery />
 
-      {/* ⭐ CUSTOMER REVIEWS (LIVE FROM FIREBASE) */}
       <Reviews />
 
-      {/* 📱 REVIEW FORM (PHONE USERS SUBMIT HERE) */}
       <ReviewForm />
 
-      {/* FLOATING WHATSAPP BUTTON */}
       <WhatsAppButton />
 
     </main>
