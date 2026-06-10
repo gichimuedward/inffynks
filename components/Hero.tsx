@@ -24,6 +24,7 @@ export default function Hero() {
   return (
     <section className="relative h-screen overflow-hidden">
 
+      {/* SLIDESHOW BACKGROUND */}
       {heroImages.map((img, i) => (
         <Image
           key={img}
@@ -37,12 +38,13 @@ export default function Hero() {
         />
       ))}
 
-      {/* darker cinematic overlay */}
+      {/* DARK OVERLAY (CINEMATIC LOOK) */}
       <div className="absolute inset-0 bg-black/60" />
 
+      {/* CONTENT */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
 
-        {/* logo */}
+        {/* LOGO */}
         <div className="relative w-36 h-36 mb-4">
           <Image
             src="/images/logo/logo.png"
@@ -53,7 +55,8 @@ export default function Hero() {
           />
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-bold text-white">
+        {/* BRAND */}
+        <h1 className="text-5xl md:text-7xl font-bold text-white tracking-wide">
           INFFYNKS
         </h1>
 
@@ -65,23 +68,11 @@ export default function Hero() {
           Premium body art crafted with precision, creativity, and detail.
         </p>
 
-        <div className="flex gap-4 mt-8 flex-col md:flex-row">
+        {/* CLEAN INFO ONLY (NO BUTTONS) */}
+        <p className="text-gray-400 mt-6 text-sm">
+          Scroll down to explore designs and book your session below
+        </p>
 
-          <a
-            href="#gallery"
-            className="bg-yellow-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-yellow-400 transition"
-          >
-            View Work
-          </a>
-
-          <a
-            href="https://wa.me/254734508112"
-            className="border border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-black transition"
-          >
-            Book Now
-          </a>
-
-        </div>
       </div>
     </section>
   );

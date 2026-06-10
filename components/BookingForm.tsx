@@ -7,13 +7,16 @@ export default function BookingForm() {
   const [service, setService] = useState("Tattoo");
   const [subService, setSubService] = useState("");
   const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const phoneNumber = "254734508112";
 
   const tattooOptions = [
     "Small Tattoo (From 1,500 KES)",
     "Medium Tattoo (From 3,000 KES)",
-    "Custom Tattoo (Quote Required)",
+    "Large Tattoo (From 5,000 KES)",
+    "Custom Design (Quote Required)",
     "Sleeve / Full Piece (Quote Required)",
   ];
 
@@ -27,13 +30,15 @@ export default function BookingForm() {
   ];
 
   const sendToWhatsApp = () => {
-    if (!name || !message || !subService) {
-      alert("Please fill all fields");
+    if (!name || !subService || !message) {
+      alert("Please complete all fields");
       return;
     }
 
+    setLoading(true);
+
     const text = `
-🔥 NEW BOOKING REQUEST
+🔥 INFFYNKS BOOKING REQUEST
 
 Name: ${name}
 Service: ${service}
@@ -46,26 +51,59 @@ ${message}
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
 
     window.open(url, "_blank");
+
+    // UX feedback
+    setTimeout(() => {
+      setSent(true);
+      setLoading(false);
+
+      // reset form
+      setName("");
+      setService("Tattoo");
+      setSubService("");
+      setMessage("");
+    }, 800);
   };
 
-  return (
-    <div className="bg-zinc-900 p-6 rounded-xl max-w-xl mx-auto">
+  if (sent) {
+    return (
+      <div className="bg-zinc-900 p-8 rounded-xl text-center max-w-xl mx-auto">
+        <h3 className="text-2xl font-bold text-yellow-500">
+          Request Sent ✔
+        </h3>
 
-      <h3 className="text-xl font-bold text-yellow-500 mb-4">
-        Book a Session
+        <p className="text-gray-300 mt-3">
+          We’ve opened WhatsApp for you. Please send the message to complete your booking.
+        </p>
+
+        <button
+          onClick={() => setSent(false)}
+          className="mt-6 bg-yellow-500 text-black px-6 py-2 rounded-lg font-bold"
+        >
+          Send Another Request
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-zinc-900 p-6 rounded-xl max-w-xl mx-auto w-full">
+
+      <h3 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
+        Book Your Session
       </h3>
 
-      {/* NAME */}
       <input
         type="text"
         placeholder="Your Name"
-        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white rounded"
+        value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
-      {/* SERVICE TYPE */}
       <select
-        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white rounded"
+        value={service}
         onChange={(e) => {
           setService(e.target.value);
           setSubService("");
@@ -75,10 +113,10 @@ ${message}
         <option value="Piercing">Piercing</option>
       </select>
 
-      {/* SUB OPTIONS (DYNAMIC DROPDOWN) */}
       {service === "Tattoo" && (
         <select
-          className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+          className="w-full p-3 mb-3 bg-black border border-gray-700 text-white rounded"
+          value={subService}
           onChange={(e) => setSubService(e.target.value)}
         >
           <option value="">Select Tattoo Type</option>
@@ -92,7 +130,8 @@ ${message}
 
       {service === "Piercing" && (
         <select
-          className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+          className="w-full p-3 mb-3 bg-black border border-gray-700 text-white rounded"
+          value={subService}
           onChange={(e) => setSubService(e.target.value)}
         >
           <option value="">Select Piercing Type</option>
@@ -104,20 +143,20 @@ ${message}
         </select>
       )}
 
-      {/* DESCRIPTION */}
       <textarea
-        placeholder="Describe your idea (placement, style, size, etc.)"
-        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
-        rows={4}
+        placeholder="Describe your idea (placement, style, size...)"
+        className="w-full p-3 mb-4 bg-black border border-gray-700 text-white rounded"
+        rows={5}
+        value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
 
-      {/* SUBMIT */}
       <button
         onClick={sendToWhatsApp}
-        className="w-full bg-yellow-500 text-black py-3 font-bold rounded-lg hover:bg-yellow-400 transition"
+        disabled={loading}
+        className="w-full bg-yellow-500 text-black py-3 font-bold rounded-lg hover:bg-yellow-400 transition disabled:opacity-50"
       >
-        Send Booking Request
+        {loading ? "Sending..." : "Send Booking Request"}
       </button>
 
     </div>

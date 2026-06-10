@@ -4,7 +4,6 @@ import Services from "@/components/Services";
 import Pricing from "@/components/Pricing";
 import Gallery from "@/components/Gallery";
 import BookingForm from "@/components/BookingForm";
-import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function Home() {
   return (
@@ -18,12 +17,10 @@ export default function Home() {
 
       <Gallery />
 
-      {/* BOOKING FORM */}
+      {/* ONLY BOOKING SYSTEM */}
       <section id="contact" className="py-20 px-6 bg-zinc-950">
         <BookingForm />
       </section>
-
-      <WhatsAppButton />
 
     </main>
   );
