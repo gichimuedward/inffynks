@@ -3,67 +3,70 @@
 import { useState } from "react";
 
 export default function BookingForm() {
-  const [form, setForm] = useState({
-    name: "",
-    type: "Tattoo",
-    idea: "",
-    date: "",
-  });
+  const [name, setName] = useState("");
+  const [service, setService] = useState("Tattoo");
+  const [message, setMessage] = useState("");
 
   const phoneNumber = "254734508112";
 
-  const sendWhatsApp = () => {
-    const message = `
-New Booking Request:
-Name: ${form.name}
-Type: ${form.type}
-Idea: ${form.idea}
-Preferred Date: ${form.date}
+  const sendToWhatsApp = () => {
+    if (!name || !message) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const text = `
+Hello Inffynks 👋
+
+Name: ${name}
+Service: ${service}
+
+Details:
+${message}
     `;
 
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+
     window.open(url, "_blank");
   };
 
   return (
-    <section className="py-20 px-6 text-center">
-      <h2 className="text-3xl font-bold mb-6">Book Your Session</h2>
+    <div className="bg-zinc-900 p-6 rounded-xl max-w-xl mx-auto">
 
-      <div className="max-w-md mx-auto flex flex-col gap-4">
-        
-        <input
-          placeholder="Your Name"
-          className="p-3 bg-black border border-gray-700 rounded"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
+      <h3 className="text-xl font-bold text-yellow-500 mb-4">
+        Book a Session
+      </h3>
 
-        <select
-          className="p-3 bg-black border border-gray-700 rounded"
-          onChange={(e) => setForm({ ...form, type: e.target.value })}
-        >
-          <option>Tattoo</option>
-          <option>Piercing</option>
-        </select>
+      <input
+        type="text"
+        placeholder="Your Name"
+        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+        onChange={(e) => setName(e.target.value)}
+      />
 
-        <textarea
-          placeholder="Describe your idea"
-          className="p-3 bg-black border border-gray-700 rounded"
-          onChange={(e) => setForm({ ...form, idea: e.target.value })}
-        />
+      <select
+        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+        onChange={(e) => setService(e.target.value)}
+      >
+        <option>Tattoo</option>
+        <option>Piercing</option>
+        <option>Custom Design</option>
+      </select>
 
-        <input
-          type="date"
-          className="p-3 bg-black border border-gray-700 rounded"
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
-        />
+      <textarea
+        placeholder="Describe your idea..."
+        className="w-full p-3 mb-3 bg-black border border-gray-700 text-white"
+        rows={4}
+        onChange={(e) => setMessage(e.target.value)}
+      />
 
-        <button
-          onClick={sendWhatsApp}
-          className="bg-green-500 py-3 rounded font-bold"
-        >
-          Send Booking to WhatsApp
-        </button>
-      </div>
-    </section>
+      <button
+        onClick={sendToWhatsApp}
+        className="w-full bg-yellow-500 text-black py-3 font-bold rounded-lg hover:bg-yellow-400 transition"
+      >
+        Send Booking Request
+      </button>
+
+    </div>
   );
 }
