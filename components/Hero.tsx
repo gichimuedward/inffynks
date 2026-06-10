@@ -11,81 +11,76 @@ const heroImages = [
 ];
 
 export default function Hero() {
-  const [currentImage, setCurrentImage] = useState(0);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) =>
-        prev === heroImages.length - 1 ? 0 : prev + 1
-      );
+    const t = setInterval(() => {
+      setCurrent((p) => (p === heroImages.length - 1 ? 0 : p + 1));
     }, 4500);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(t);
   }, []);
 
   return (
-    <section
-      id="home"
-      className="relative h-screen overflow-hidden"
-    >
-      {heroImages.map((image, index) => (
+    <section className="relative h-screen overflow-hidden">
+
+      {heroImages.map((img, i) => (
         <Image
-          key={image}
-          src={image}
-          alt={`Tattoo ${index + 1}`}
+          key={img}
+          src={img}
+          alt="hero"
           fill
-          priority={index === 0}
+          priority={i === 0}
           className={`object-cover transition-opacity duration-1000 ${
-            currentImage === index
-              ? "opacity-100"
-              : "opacity-0"
+            current === i ? "opacity-100" : "opacity-0"
           }`}
         />
       ))}
 
-      <div className="absolute inset-0 bg-black/45" />
+      {/* darker cinematic overlay */}
+      <div className="absolute inset-0 bg-black/60" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
 
-        <div className="relative w-32 h-32 md:w-52 md:h-52 mb-6">
+        {/* logo */}
+        <div className="relative w-36 h-36 mb-4">
           <Image
             src="/images/logo/logo.png"
-            alt="Inffynks Logo"
+            alt="logo"
             fill
             className="object-contain"
             priority
           />
         </div>
 
-        <h1 className="text-4xl md:text-7xl font-bold text-white">
+        <h1 className="text-5xl md:text-7xl font-bold text-white">
           INFFYNKS
         </h1>
 
-        <h2 className="text-lg md:text-2xl text-yellow-500 mt-2">
-          Tattoos & Piercings
-        </h2>
-
-        <p className="max-w-2xl mt-6 text-gray-200 text-base md:text-lg">
-          Premium Tattoos, Professional Piercings,
-          Custom Artwork & Unique Designs.
+        <p className="text-yellow-500 text-lg md:text-xl mt-2">
+          Tattoos • Piercings • Custom Art
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4 mt-8">
+        <p className="text-gray-300 max-w-xl mt-4 text-sm md:text-base">
+          Premium body art crafted with precision, creativity, and detail.
+        </p>
+
+        <div className="flex gap-4 mt-8 flex-col md:flex-row">
+
           <a
             href="#gallery"
             className="bg-yellow-500 text-black px-8 py-3 rounded-lg font-bold hover:bg-yellow-400 transition"
           >
-            View Our Work
+            View Work
           </a>
 
           <a
             href="https://wa.me/254734508112"
-            target="_blank"
-            rel="noopener noreferrer"
             className="border border-white text-white px-8 py-3 rounded-lg hover:bg-white hover:text-black transition"
           >
             Book Now
           </a>
+
         </div>
       </div>
     </section>
