@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
@@ -12,4 +13,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+// DATABASE
 export const db = getFirestore(app);
+
+// STORAGE (THIS FIXES YOUR ERROR)
+export const storage = getStorage(app);
